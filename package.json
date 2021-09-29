@@ -1,0 +1,20 @@
+{
+  "name": "10-connect-to-blockchain-with-web3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "run-arbitrage.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dynamic-amm/sdk": "^3.0.11",
+    "@pancakeswap/sdk": "^2.4.0",
+    "apeswap-sdk": "^1.0.4",
+    "coingecko-api": "^1.0.10",
+    "dotenv": "^8.2.0",
+    "web3": "^1.2.9"
+  }
+}
