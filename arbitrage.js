@@ -74,8 +74,8 @@ const init = async () => {
       const route = await new Route(usdtWbnbKyber, usdtKyber);
       console.log(route);
       const kyberRates = {
-        buy: parseFloat(AMOUNT_USDT_WEI / (route.midPrice[0] * 10 ** 18)),
-        sell: parseFloat(route.midPrice[1] / AMOUNT_BNB),
+        buy: parseFloat(AMOUNT_USDT_WEI / (route.midPrice.toSignificant(6) * 10 ** 18)),
+        sell: parseFloat(route.midPrice.toSignificant(6) / AMOUNT_BNB),
       };
       console.log('Kyber BNB/USDT');
       console.log(kyberRates);
