@@ -1,24 +1,29 @@
-const { pancakeswapPrices } = require("./pancakeswap");
-const { mainnet: addresses } = require('./addresses');
-const { ChainId, Fetcher, TokenAmount } = require('@pancakeswap/sdk');
-const {JsonRpcProvider} = require("@ethersproject/providers");
-const provider = new JsonRpcProvider('https://bsc-dataseed1.binance.org/');
+const Web3 = require('web3');
+const { bakeryswap } = require('./bakeryswap');
+const { kyber } = require('./kyber');
+const { mdex } = require('./mdex');
+const { pancakeswap } = require('./pancakeswap');
 
-const pancakeswap = async () => {
-    const [wbnb, busd] = await Promise.all(
-      [addresses.tokens.wbnb, addresses.tokens.busd].map(tokenAddress => (
-        Fetcher.fetchTokenData(
-          ChainId.MAINNET,
-          tokenAddress,
-          provider
-        )
-    )));
-    const busdWbnb = await Fetcher.fetchPairData(
-      busd,
-      wbnb,
-      provider
-    );
-    pancakeswapPrices(busdWbnb);
-    }
+const web3 = new Web3(
+    new Web3.providers.WebsocketProvider(process.env.INFURA_URL)
+  );
 
-pancakeswap();
+const init = async () => {
+web3.eth.subscribe('newBlockHeaders')
+    .on('data', async block => {
+      console.log(`New block received. Block # ${block.number}`);
+
+      const prices = Promise.all([
+        bakeryswap(),
+        pancakeswap(),
+        kyber(),
+        mdex()
+      ])
+
+      
+    })
+    .on('error', error => {
+        console.log(error);
+    });
+};
+init();
