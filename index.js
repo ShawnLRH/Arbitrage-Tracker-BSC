@@ -1,8 +1,11 @@
 const Web3 = require('web3');
-const { bakeryswap } = require('./bakeryswap');
-const { kyber } = require('./kyber');
-const { mdex } = require('./mdex');
-const { pancakeswap } = require('./pancakeswap');
+const cron = require('node-cron');
+const { main, mainDB } = require('./controller');
+
+cron.schedule('17 * * * *', () => {
+    mainDB();
+    console.log('Running main controller daily...');
+});
 
 const web3 = new Web3(
     new Web3.providers.WebsocketProvider(process.env.INFURA_URL)
@@ -14,13 +17,10 @@ web3.eth.subscribe('newBlockHeaders')
       console.log(`New block received. Block # ${block.number}`);
 
       const prices = Promise.all([
-        bakeryswap(),
-        pancakeswap(),
-        kyber(),
-        mdex()
+        await main()
       ])
 
-      
+
     })
     .on('error', error => {
         console.log(error);
