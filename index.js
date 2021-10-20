@@ -6,8 +6,6 @@ cron.schedule('*/15 * * * *', () => {
     insert_database_method();
     console.log('Running main controller daily...');
 });
-mainDB();
-console.log("running")
 const web3 = new Web3(
     new Web3.providers.WebsocketProvider(process.env.INFURA_URL)
   );
