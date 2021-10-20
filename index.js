@@ -1,9 +1,9 @@
 const Web3 = require('web3');
 const cron = require('node-cron');
-const { main, mainDB } = require('./controller');
+const { main, mainDB, retrieve_price_method, insert_database_method } = require('./controller');
 
 cron.schedule('*/15 * * * *', () => {
-    mainDB();
+    insert_database_method();
     console.log('Running main controller daily...');
 });
 mainDB();
@@ -18,7 +18,7 @@ web3.eth.subscribe('newBlockHeaders')
       console.log(`New block received. Block # ${block.number}`);
 
       const prices = Promise.all([
-        await main()
+        await retrieve_price_method()
       ])
 
 

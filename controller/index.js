@@ -4,7 +4,7 @@ const { insert_prices_DB, get_prices } = require('../services');
 // get the client
 require('dotenv').config()
 
-module.exports.mainDB = async(req, res) => {
+module.exports.insert_database_method = async(req, res) => {
     try{
         const result_info = await get_pair_to_dex()
         for(let i = 0; i < result_info.length; i++){
@@ -17,7 +17,7 @@ module.exports.mainDB = async(req, res) => {
     }
 }
 
-module.exports.main = async(req, res) => {
+module.exports.retrieve_price_method = async(req, res) => {
 try{
     const result_info = await get_pair_to_dex()
     for(let i = 0; i < result_info.length; i++){
