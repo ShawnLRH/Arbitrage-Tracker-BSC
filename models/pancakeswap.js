@@ -1,35 +1,9 @@
 require('dotenv').config()
-const Web3 = require('web3');
 const { ChainId, Fetcher, TokenAmount} = require('@pancakeswap/sdk');
-const {ChainId: mdexChain, Fetcher: mdexFetcher, TokenAmount: mdexToken} = require('@mdex/bsc-sdk');
-const {ChainId: kyberChain, Fetcher: kyberFetcher, Route} = require('@dynamic-amm/sdk');
-const {JsonRpcProvider} = require("@ethersproject/providers");
-const provider = new JsonRpcProvider('https://bsc-dataseed1.binance.org/');
-const CoinGecko = require('coingecko-api');
-const CoinGeckoClient = new CoinGecko();
-const mysql = require('mysql2');
+const { connection, web3, provider } = require('../config');
+const { getLatestCoinPrice } = require('../libraries');
 
-const web3 = new Web3(
-  new Web3.providers.WebsocketProvider(process.env.INFURA_URL)
-);
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'arbitrage',
-    multipleStatements: true
-});
-
-const getLatestCoinPrice = async(slug) => {
-    const price = await CoinGeckoClient.coins.markets({
-        vs_currency: 'usd',
-        ids: [slug]
-    });
-    return price.data[0].current_price;
-}
-
-module.exports.pancakePricesDB = async(coin1Address, coin2Address, coin1Name, coin2Name, coin1Slug, coin2Slug, pair_dex_id) => {
+module.exports.insert_to_DB = async(coin1Address, coin2Address, coin1Name, coin2Name, coin1Slug, coin2Slug, pair_dex_id) => {
     let RECENT_COIN1_PRICE = await getLatestCoinPrice(coin1Slug);
     let RECENT_COIN2_PRICE = await getLatestCoinPrice(coin2Slug);
     let RECENT_BNB_PRICE = await getLatestCoinPrice('binancecoin')
@@ -69,7 +43,7 @@ module.exports.pancakePricesDB = async(coin1Address, coin2Address, coin1Name, co
     ); 
 }
 
-module.exports.pancakePrices = async(coin1Address, coin2Address, coin1Name, coin2Name, coin1Slug, coin2Slug, pair_dex_id) => {
+module.exports.displayPrices = async(coin1Address, coin2Address, coin1Name, coin2Name, coin1Slug, coin2Slug) => {
     let RECENT_COIN1_PRICE = await getLatestCoinPrice(coin1Slug);
     let RECENT_COIN2_PRICE = await getLatestCoinPrice(coin2Slug);
     let RECENT_BNB_PRICE = await getLatestCoinPrice('binancecoin')
