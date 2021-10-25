@@ -5,9 +5,10 @@ const Kyber = require('../models/kyber');
 const Mdex = require('../models/mdex');
 const Pancakeswap = require('../models/pancakeswap');
 
+
 module.exports.insert_prices_DB = async(result_dex, result_address, i) => {
     const exchange = await initExchange(result_dex[0].id);
-    await exchange.insertPricesDB(result_address[0][0].address, result_address[1][0].address, result_address[0][0].coin, result_address[1][0].coin, result_address[0][0].slug, result_address[1][0].slug, i)
+    await exchange.insertToDB(result_address[0], result_address[1], i)
 }
 
 module.exports.get_prices = async(result_dex, result_address, i) => {
@@ -17,8 +18,8 @@ module.exports.get_prices = async(result_dex, result_address, i) => {
 
 module.exports.comparePrices = async(result_pairs_dex_one, result_pairs_dex_two, i) => {
     console.log("checking");
-    const exchange1 = await initExchange(result_pairs_dex_one[0].exchange);
-    const exchange2 = await initExchange(result_pairs_dex_two[0].exchange);
+    const exchange1 = await initExchange(result_pairs_dex_one[0].dex_id);
+    const exchange2 = await initExchange(result_pairs_dex_two[0].dex_id);
     const prices1 = await exchange1.displayPrices(result_pairs_dex_one);
     const prices2 = await exchange2.displayPrices(result_pairs_dex_two);
     const AMOUNT_BNB_WEI = web3.utils.toWei("100");
