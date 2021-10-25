@@ -43,42 +43,43 @@ class Mdex {
         ); 
     }
 
-    async displayPrices(coin1Address, coin2Address, coin1Name, coin2Name, coin1Slug, coin2Slug) {
-        let RECENT_COIN1_PRICE = await getLatestCoinPrice(coin1Slug);
-    let RECENT_COIN2_PRICE = await getLatestCoinPrice(coin2Slug);
-    let RECENT_BNB_PRICE = await getLatestCoinPrice('binancecoin')
-    const AMOUNT_BNB = 100;
-    const AMOUNT_COIN2 = AMOUNT_BNB * RECENT_BNB_PRICE / RECENT_COIN2_PRICE;
-    const AMOUNT_COIN1_WEI = web3.utils.toWei((AMOUNT_BNB * RECENT_BNB_PRICE / RECENT_COIN1_PRICE).toString());
-    const AMOUNT_COIN2_WEI = web3.utils.toWei((AMOUNT_BNB * RECENT_BNB_PRICE / RECENT_COIN2_PRICE).toString());
+    async displayPrices(result_pairs_dex_one) {
+        let RECENT_COIN1_PRICE = await getLatestCoinPrice(result_pairs_dex_one[0].base_coin_slug);
+        let RECENT_COIN2_PRICE = await getLatestCoinPrice(result_pairs_dex_one[0].quote_coin_slug);
+        let RECENT_BNB_PRICE = await getLatestCoinPrice('binancecoin')
+        const AMOUNT_BNB = 100;
+        const AMOUNT_COIN2 = AMOUNT_BNB * RECENT_BNB_PRICE / RECENT_COIN2_PRICE;
+        const AMOUNT_COIN1_WEI = web3.utils.toWei((AMOUNT_BNB * RECENT_BNB_PRICE / RECENT_COIN1_PRICE).toString());
+        const AMOUNT_COIN2_WEI = web3.utils.toWei((AMOUNT_BNB * RECENT_BNB_PRICE / RECENT_COIN2_PRICE).toString());
         
-    const [coin1, coin2] = await Promise.all(
-        [coin1Address, coin2Address].map(tokenAddress => (
-            mdexFetcher.fetchTokenData(
-                mdexChain.MAINNET,
-                tokenAddress,
-                provider
-            )
-        )));
+        const [coin1, coin2] = await Promise.all(
+            [result_pairs_dex_one[0].base_coin_address, result_pairs_dex_one[0].quote_coin_address].map(tokenAddress => (
+                mdexFetcher.fetchTokenData(
+                    mdexChain.MAINNET,
+                    tokenAddress,
+                    provider
+                )
+            ))
+        );
             
-    const pair = await mdexFetcher.fetchPairData(
-        coin1,
-        coin2,
-        provider
-    );
+        const pair = await mdexFetcher.fetchPairData(
+            coin1,
+            coin2,
+            provider
+        );
 
-    const mdexResults = await Promise.all([
-        pair.getOutputAmount(new mdexToken(coin1, AMOUNT_COIN1_WEI)),
-        pair.getOutputAmount(new mdexToken(coin2, AMOUNT_COIN2_WEI))
-    ]);
+        const mdexResults = await Promise.all([
+            pair.getOutputAmount(new mdexToken(coin1, AMOUNT_COIN1_WEI)),
+            pair.getOutputAmount(new mdexToken(coin2, AMOUNT_COIN2_WEI))
+        ]);
 
-    const mdexRates = {
-        buy: parseFloat( AMOUNT_COIN1_WEI / (mdexResults[0][0].toExact() * 10 ** 18)),
-        sell: parseFloat(mdexResults[1][0].toExact() / AMOUNT_COIN2),
-    };
-    console.log(`Mdex ${coin1Name}/${coin2Name} `);
-    console.log(mdexRates);
-    return mdexRates;
+        const mdexRates = {
+            buy: parseFloat( AMOUNT_COIN1_WEI / (mdexResults[0][0].toExact() * 10 ** 18)),
+            sell: parseFloat(mdexResults[1][0].toExact() / AMOUNT_COIN2),
+        };
+        console.log(`Mdex ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin} `);
+        console.log(mdexRates);
+        return mdexRates;
     }
 }
 

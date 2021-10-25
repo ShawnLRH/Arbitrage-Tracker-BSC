@@ -1,16 +1,12 @@
-const Web3 = require('web3');
 const cron = require('node-cron');
+const { web3 } = require('./config');
 const { main, mainDB, retrieve_price_method, insert_database_method, comparePriceMethod } = require('./controller');
 
 cron.schedule('*/15 * * * *', () => {
     insert_database_method();
     console.log('Running main controller daily...');
 });
-const web3 = new Web3(
-    new Web3.providers.WebsocketProvider(process.env.INFURA_URL)
-  );
 
-const init = async () => {
 web3.eth.subscribe('newBlockHeaders')
     .on('data', async block => {
       console.log(`New block received. Block # ${block.number}`);
@@ -23,5 +19,3 @@ web3.eth.subscribe('newBlockHeaders')
     .on('error', error => {
         console.log(error);
     });
-};
-init();

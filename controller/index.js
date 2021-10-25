@@ -1,4 +1,4 @@
-const { get_pair_to_dex, get_dex, get_pairs, get_address, get_compare_mapping, get_pairs_dex_compare, get_pairs_compare, get_dex_compare } = require('../models');
+const { get_pair_to_dex, get_dex, get_pairs, get_address, get_compare_mapping, get_pairs_dex_compare, get_pairs_compare, get_dex_compare,pairAndDexDataOne, pairAndDexDataTwo } = require('../models');
 const { insert_prices_DB, get_prices, comparePrices } = require('../services');
 
 
@@ -32,13 +32,8 @@ module.exports.insert_database_method = async(req, res) => {
 module.exports.comparePriceMethod = async(req, res) => {
     const result_compare = await get_compare_mapping();
     for(let i = 0; i < result_compare.length; i++){
-        const result_pairs_dex = await get_pairs_dex_compare(result_compare, i);
-        const result_dex = await get_dex_compare(result_pairs_dex, 0)
-        const result_dex2 = await get_dex_compare(result_pairs_dex, 1)
-        const result_pairs = await get_pairs_compare(result_pairs_dex, 0);
-        const result_pairs2 = await get_pairs_compare(result_pairs_dex, 1);
-        const result_address = await get_address(result_pairs);
-        const result_address2 = await get_address(result_pairs2);
-        await comparePrices(result_pairs_dex, result_address, result_address2, result_dex, result_dex2, i+1);
+        const result_pairs_dex_one = await pairAndDexDataOne(result_compare, i);
+        const result_pairs_dex_two = await pairAndDexDataTwo(result_compare, i);
+        await comparePrices(result_pairs_dex_one, result_pairs_dex_two, i+1)
     }
 }

@@ -43,9 +43,9 @@ class Pancakeswap {
         'INSERT INTO `prices` (buy_price, sell_price, pair_dex_id) VALUES (' + parseFloat( AMOUNT_COIN1_WEI / (pancakeswapResults[0][0].toExact() * 10 ** 18)) + ", " + parseFloat(pancakeswapResults[1][0].toExact() / AMOUNT_COIN2) + ", " + pair_dex_id + ")",
     ); 
     }
-    async displayPrices(coin1Address, coin2Address, coin1Name, coin2Name, coin1Slug, coin2Slug) {
-        let RECENT_COIN1_PRICE = await getLatestCoinPrice(coin1Slug);
-        let RECENT_COIN2_PRICE = await getLatestCoinPrice(coin2Slug);
+    async displayPrices(result_pairs_dex_one) {
+        let RECENT_COIN1_PRICE = await getLatestCoinPrice(result_pairs_dex_one[0].base_coin_slug);
+        let RECENT_COIN2_PRICE = await getLatestCoinPrice(result_pairs_dex_one[0].quote_coin_slug);
         let RECENT_BNB_PRICE = await getLatestCoinPrice('binancecoin')
         const AMOUNT_BNB = 100;
         const AMOUNT_COIN2 = AMOUNT_BNB * RECENT_BNB_PRICE / RECENT_COIN2_PRICE;
@@ -53,7 +53,7 @@ class Pancakeswap {
         const AMOUNT_COIN2_WEI = web3.utils.toWei((AMOUNT_BNB * RECENT_BNB_PRICE / RECENT_COIN2_PRICE).toString());
             
         const [coin1, coin2] = await Promise.all(
-            [coin1Address, coin2Address].map(tokenAddress => (
+            [result_pairs_dex_one[0].base_coin_address, result_pairs_dex_one[0].quote_coin_address].map(tokenAddress => (
                 Fetcher.fetchTokenData(
                     ChainId.MAINNET,
                     tokenAddress,
@@ -76,10 +76,9 @@ class Pancakeswap {
             buy: parseFloat( AMOUNT_COIN1_WEI / (pancakeswapResults[0][0].toExact() * 10 ** 18)),
             sell: parseFloat(pancakeswapResults[1][0].toExact() / AMOUNT_COIN2),
         };
-        console.log(`Pancakeswap ${coin1Name}/${coin2Name} `);
+        console.log(`Pancakeswap ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin} `);
         console.log(pancakeswapRates); 
         return pancakeswapRates;
     }
 }
-
 module.exports = Pancakeswap;
