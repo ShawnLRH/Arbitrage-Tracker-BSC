@@ -6,6 +6,7 @@ const apeswapMainnet = require('./apeswap-mainnet.json');
 const bakerySwap = require('./bakerySwap-mainnet.json');
 const mdex = require('./mdex-mainnet.json');
 const sushiswap = require('./sushiswap-mainnet.json');
+const alita = require('./alita-mainnet.json');
 
 module.exports = {
   mainnet: {
@@ -16,6 +17,7 @@ module.exports = {
     apeswap: apeswapMainnet,
     bakerySwap: bakerySwap,
     mdex: mdex,
-    sushiswap: sushiswap
+    sushiswap: sushiswap,
+    alita: alita
   }
 };

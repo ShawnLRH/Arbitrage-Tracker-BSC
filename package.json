@@ -10,11 +10,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dynamic-amm/sdk": "^3.0.11",
+    "@dynamic-amm/sdk": "^3.0.16",
+    "@ethersproject/contracts": "^5.4.1",
+    "@ethersproject/providers": "^5.4.5",
+    "@ethersproject/solidity": "^5.4.0",
+    "@mdex/bsc-sdk": "^1.0.0",
     "@pancakeswap/sdk": "^2.4.0",
     "apeswap-sdk": "^1.0.4",
+    "big-number": "^2.0.0",
     "coingecko-api": "^1.0.10",
     "dotenv": "^8.2.0",
+    "ethers": "^5.5.1",
+    "mysql2": "^2.3.0",
+    "node-cron": "^3.0.0",
+    "sequelize": "^6.6.5",
+    "simple-uniswap-bsc-sdk": "^1.1.8",
     "web3": "^1.2.9"
   }
 }

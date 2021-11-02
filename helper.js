@@ -1,3 +1,4 @@
+const alitaswap = require("./models/alita");
 const apeswap = require("./models/apeswap");
 const Kyber = require("./models/kyber");
 const Mdex = require("./models/mdex");
@@ -15,6 +16,8 @@ const initExchange = (dexId, exchange) => {
         return new apeswap();
     }else if (dexId == '5') {
         return new sushiswap();
+    }else if (dexId == '6') {
+        return new alitaswap();
     }else{
         console.log("Please add exchange first");
     }
