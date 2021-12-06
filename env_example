@@ -1,0 +1,9 @@
+DB_HOST=
+DB_NAME=
+DB_USER=
+DB_PASS=
+LOG_INFO=
+
+INFURA_URL = <Infura URL>
+PRIVATE_KEY = <Wallet PRIVATE_KEY>
+telegram = <Telegram bot api key>
