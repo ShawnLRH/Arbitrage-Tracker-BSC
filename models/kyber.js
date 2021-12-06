@@ -35,7 +35,7 @@ class Kyber {
           };
         
           console.log(`Kyber ${resultAddressOne[0].coin}/${resultAddressTwo[0].coin}`)
-          console.log(rates);
+          console.table(rates);
           connection.query(
               'INSERT INTO `prices` (buy_price, sell_price, pair_dex_id) VALUES (' + rates.buy + ", " + rates.sell + ", " + pair_dex_id + ")",
           ); 
@@ -74,7 +74,7 @@ class Kyber {
             sell: amounts1[1] / 1000000
         };
         console.log(`Kyber ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin}`)
-        console.log(rates);
+        console.table(rates);
         return rates;
     }
 }

@@ -39,7 +39,7 @@ class Pancakeswap {
             sell: parseFloat(pancakeswapResults[1][0].toExact() / AMOUNT_COIN2),
         };
         console.log(`Pancakeswap ${resultAddressOne[0].coin}/${resultAddressTwo[0].coin} `);
-        console.log(pancakeswapRates); 
+        console.table(pancakeswapRates); 
         connection.query(
             'INSERT INTO `prices` (buy_price, sell_price, pair_dex_id) VALUES (' + parseFloat( AMOUNT_COIN1_WEI / (pancakeswapResults[0][0].toExact() * 10 ** 18)) + ", " + parseFloat(pancakeswapResults[1][0].toExact() / AMOUNT_COIN2) + ", " + pair_dex_id + ")",
         ); 
@@ -78,7 +78,7 @@ class Pancakeswap {
             sell: parseFloat(pancakeswapResults[1][0].toExact() / AMOUNT_COIN2),
         };
         console.log(`Pancakeswap ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin} `);
-        console.log(pancakeswapRates); 
+        console.table(pancakeswapRates); 
         return pancakeswapRates;
     }
 }
