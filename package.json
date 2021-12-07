@@ -4,7 +4,8 @@
   "description": "",
   "main": "run-arbitrage.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "production": "NODE_ENV=production pm2 start ./index.js --name arbitraging --cron '2 */8 * * *' --time"
   },
   "keywords": [],
   "author": "",
@@ -15,10 +16,7 @@
     "@ethersproject/providers": "^5.4.5",
     "@ethersproject/solidity": "^5.4.0",
     "@mdex/bsc-sdk": "^1.0.0",
-    "@openzeppelin/contracts": "^4.3.3",
     "@pancakeswap/sdk": "^2.4.0",
-    "@truffle/hdwallet-provider": "^1.6.0",
-    "apeswap-sdk": "^1.0.4",
     "big-number": "^2.0.0",
     "coingecko-api": "^1.0.10",
     "commander": "^8.3.0",
