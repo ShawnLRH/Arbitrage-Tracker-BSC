@@ -4,6 +4,7 @@ const bakerySwap = require('./bakerySwap.json');
 const apeswap = require('./apeswap.json');
 const sushiswap = require('./sushiswap.json');
 const alita = require("./alita.json");
+const mdex = require("./mdex.json");
 
 module.exports = {
   pancakeSwap,
@@ -11,5 +12,6 @@ module.exports = {
   kyber,
   apeswap,
   sushiswap,
-  alita
+  alita,
+  mdex
 };

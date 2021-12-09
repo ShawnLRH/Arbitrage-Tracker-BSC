@@ -1,7 +1,7 @@
 require('dotenv').config();
 const abis = require('../abis');
 const { mainnet: addresses } = require('../addresses');
-const { web3 } = require('../config');
+const { web3, connection } = require('../config');
 const BigNumber = require('bignumber.js');
 
 const apeRouter = new web3.eth.Contract(
@@ -16,8 +16,10 @@ class apeswap {
             buy: 1 / (amounts2[1] / 100000),
             sell: amounts1[1] / 100000
         };
-        console.log(`Apeswap ${resultAddressOne[0].coin}/${resultAddressTwo[0].coin}`);
-        console.table(rates);
+        if(process.env.logging_enabled){
+            console.log(`Apeswap ${resultAddressOne[0].coin}/${resultAddressTwo[0].coin}`);
+            console.table(rates);
+        }
         connection.query(
             'INSERT INTO `prices` (buy_price, sell_price, pair_dex_id) VALUES (' + rates.buy + ", " + rates.sell + ", " + pair_dex_id + ")",
         );
@@ -30,8 +32,10 @@ class apeswap {
             buy: 1 / (amounts2[1] / 100000),
             sell: amounts1[1] / 100000
         };
-        console.log(`Apeswap ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin}`);
-        console.table(rates);
+        if(process.env.logging_enabled){
+            console.log(`Apeswap ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin}`);
+            console.table(rates);
+        }
         return rates;
     }
 }

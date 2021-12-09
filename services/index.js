@@ -35,7 +35,6 @@ module.exports.comparePrices = async(result_pairs_dex_one, result_pairs_dex_two,
     //     Flashloan.abi,
     //     Flashloan.networks[networkId].address
     //   );
-    console.log("checking");
     const exchange1 = await initExchange(result_pairs_dex_one[0].dex_id);
     const exchange2 = await initExchange(result_pairs_dex_two[0].dex_id);
     const prices1 = await exchange1.displayPrices(result_pairs_dex_one);
@@ -49,10 +48,12 @@ module.exports.comparePrices = async(result_pairs_dex_one, result_pairs_dex_two,
     const profit1 = (parseInt(AMOUNT_BNB_WEI) / 10 ** 18) * (prices1.sell - prices2.buy) - (txCost / 10 ** 18) * currentBnbPrice;
     const profit2 = (parseInt(AMOUNT_BNB_WEI) / 10 ** 18) * (prices2.sell - prices1.buy) - (txCost / 10 ** 18) * currentBnbPrice;
     if(profit1 > 0) {
-        console.log('Arbitrage opportunity found!');
-        console.log(`Buy ${result_pairs_dex_one[0].base_coin_coin} on ${result_pairs_dex_two[0].exchange} at ${prices2.buy} USD`);
-        console.log(`Sell ${result_pairs_dex_one[0].base_coin_coin} on ${result_pairs_dex_one[0].exchange} at ${prices1.sell} USD`);
-        console.log(`Expected profit: ${profit1} USD`);
+        if(process.env.logging_enabled){
+            console.log('Arbitrage opportunity found!');
+            console.log(`Buy ${result_pairs_dex_one[0].base_coin_coin} on ${result_pairs_dex_two[0].exchange} at ${prices2.buy} USD`);
+            console.log(`Sell ${result_pairs_dex_one[0].base_coin_coin} on ${result_pairs_dex_one[0].exchange} at ${prices1.sell} USD`);
+            console.log(`Expected profit: ${profit1} USD`);
+        }
         connection.query(
             'INSERT INTO `compare_prices` (compare_id, buy_exchange, sell_exchange, difference, profit_loss) VALUES (' + i + ', "' + result_pairs_dex_two[0].exchange + '", "' + result_pairs_dex_one[0].exchange + '", ' + profit1.toFixed(3) +', "profit")',
         );
@@ -78,10 +79,12 @@ module.exports.comparePrices = async(result_pairs_dex_one, result_pairs_dex_two,
         //   console.log(`Transaction hash: ${receipt.transactionHash}`);
         //Execute arb Kyber <=> Uniswap
     } else if(profit2 > 0) {
-        console.log('Arbitrage opportunity found!');
-        console.log(`Buy ${result_pairs_dex_one[0].base_coin_coin} from ${result_pairs_dex_one[0].exchange} at ${prices1.buy} USD`);
-        console.log(`Sell ${result_pairs_dex_one[0].base_coin_coin} from ${result_pairs_dex_two[0].exchange} at ${prices2.sell} USD`);
-        console.log(`Expected profit: ${profit2} USD`);
+        if(process.env.logging_enabled){
+            console.log('Arbitrage opportunity found!');
+            console.log(`Buy ${result_pairs_dex_one[0].base_coin_coin} from ${result_pairs_dex_one[0].exchange} at ${prices1.buy} USD`);
+            console.log(`Sell ${result_pairs_dex_one[0].base_coin_coin} from ${result_pairs_dex_two[0].exchange} at ${prices2.sell} USD`);
+            console.log(`Expected profit: ${profit2} USD`);
+        }
         connection.query(
             'INSERT INTO `compare_prices` (compare_id, buy_exchange, sell_exchange, difference, profit_loss) VALUES (' + i + ', "' + result_pairs_dex_one[0].exchange + '", "' + result_pairs_dex_two[0].exchange + '", ' + profit2.toFixed(3) +', "profit")',
         );
@@ -89,25 +92,30 @@ module.exports.comparePrices = async(result_pairs_dex_one, result_pairs_dex_two,
         await bot.sendMessage('-474954526', `Buy ${result_pairs_dex_one[0].base_coin_coin} with ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin} pair from ${result_pairs_dex_one[0].exchange} at ${prices1.buy} USD and Sell ${result_pairs_dex_one[0].base_coin_coin} with ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin} pair from ${result_pairs_dex_two[0].exchange} at ${prices2.sell} USD`);
         //Execute arb Uniswap <=> Kyber
     }else{
-        console.log('No Arbitrage opportunity found!');
+        if(process.env.logging_enabled){
+            console.log('No Arbitrage opportunity found!');
+        }
         let buy1 = await ["buy", result_pairs_dex_one[0].base_coin_coin, result_pairs_dex_two[0].exchange, prices2.buy];
         let sell1 = await ["sell", result_pairs_dex_one[0].base_coin_coin, result_pairs_dex_one[0].exchange, prices1.sell];
         let total1 = [buy1, sell1];
-        console.log(total1);
-        await console.table(total1);
-        // console.log(`Buy ${result_pairs_dex_one[0].base_coin_coin} on ${result_pairs_dex_two[0].exchange} at ${prices2.buy} USD`);
-        // console.log(`Sell ${result_pairs_dex_one[0].base_coin_coin} on ${result_pairs_dex_one[0].exchange} at ${prices1.sell} USD`);
-        console.log(`Expected loss: ${Math.abs(profit1)} USD`);
+        if(process.env.logging_enabled){
+            await console.table(total1);
+            // console.log(`Buy ${result_pairs_dex_one[0].base_coin_coin} on ${result_pairs_dex_two[0].exchange} at ${prices2.buy} USD`);
+            // console.log(`Sell ${result_pairs_dex_one[0].base_coin_coin} on ${result_pairs_dex_one[0].exchange} at ${prices1.sell} USD`);
+            console.log(`Expected loss: ${Math.abs(profit1)} USD`);
+        }
         connection.query(
             'INSERT INTO `compare_prices` (compare_id, buy_exchange, sell_exchange, difference, profit_loss) VALUES (' + i + ', "' + result_pairs_dex_two[0].exchange + '", "' + result_pairs_dex_one[0].exchange + '", ' + profit1.toFixed(3) +', "loss")',
         ); 
         let buy2 = await["buy", result_pairs_dex_one[0].base_coin_coin, result_pairs_dex_one[0].exchange, prices1.buy];
         let sell2 = await["sell", result_pairs_dex_one[0].base_coin_coin, result_pairs_dex_two[0].exchange, prices2.sell];
         let total2 = [buy2, sell2];
-        await console.table(total2);
-        // console.log(`Buy ${result_pairs_dex_one[0].base_coin_coin} from ${result_pairs_dex_one[0].exchange} at ${prices1.buy} USD`);
-        // console.log(`Sell ${result_pairs_dex_one[0].base_coin_coin} from ${result_pairs_dex_two[0].exchange} at ${prices2.sell} USD`);
-        console.log(`Expected loss: ${Math.abs(profit2)} USD`);
+        if(process.env.logging_enabled){
+            await console.table(total2);
+            // console.log(`Buy ${result_pairs_dex_one[0].base_coin_coin} from ${result_pairs_dex_one[0].exchange} at ${prices1.buy} USD`);
+            // console.log(`Sell ${result_pairs_dex_one[0].base_coin_coin} from ${result_pairs_dex_two[0].exchange} at ${prices2.sell} USD`);
+            console.log(`Expected loss: ${Math.abs(profit2)} USD`);
+        }
         connection.query(
             'INSERT INTO `compare_prices` (compare_id, buy_exchange, sell_exchange, difference, profit_loss) VALUES (' + i + ', "' + result_pairs_dex_one[0].exchange + '", "' + result_pairs_dex_two[0].exchange + '", ' + profit2.toFixed(3) +', "loss")',
         );

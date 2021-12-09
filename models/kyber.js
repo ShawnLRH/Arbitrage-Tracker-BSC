@@ -13,33 +13,34 @@ class Kyber {
     async insertToDB(resultAddressOne, resultAddressTwo, pair_dex_id){
         const [coin1, coin2] = await Promise.all(
             [resultAddressOne[0].address, resultAddressTwo[0].address].map(tokenAddress => (
-              kyberFetcher.fetchTokenData(
-                  kyberChain.BSCMAINNET,
-                  tokenAddress,
-                  provider
-              )
-          )));
+                kyberFetcher.fetchTokenData(
+                    kyberChain.BSCMAINNET,
+                    tokenAddress,
+                    provider
+                )
+            )));
         
-          const pair = await kyberFetcher.fetchPairData(
+        const pair = await kyberFetcher.fetchPairData(
             coin1,
             coin2,
             "0x878dFE971d44e9122048308301F540910Bbd934c",
             provider
-          );
+        );
         
-          const amounts1 = await kyberRouter.methods.getAmountsOut(1000000, [pair[1].address], [resultAddressOne[0].address, resultAddressTwo[0].address]).call();
-          const amounts2 = await kyberRouter.methods.getAmountsOut(1000000, [pair[1].address], [resultAddressTwo[0].address, resultAddressOne[0].address]).call();
-          const rates = {
-              buy: 1 / (amounts2[1] / 1000000),
-              sell: amounts1[1] / 1000000
-          };
-        
-          console.log(`Kyber ${resultAddressOne[0].coin}/${resultAddressTwo[0].coin}`)
-          console.table(rates);
-          connection.query(
-              'INSERT INTO `prices` (buy_price, sell_price, pair_dex_id) VALUES (' + rates.buy + ", " + rates.sell + ", " + pair_dex_id + ")",
-          ); 
-    }
+        const amounts1 = await kyberRouter.methods.getAmountsOut(1000000, [pair[1].address], [resultAddressOne[0].address, resultAddressTwo[0].address]).call();
+        const amounts2 = await kyberRouter.methods.getAmountsOut(1000000, [pair[1].address], [resultAddressTwo[0].address, resultAddressOne[0].address]).call();
+        const rates = {
+            buy: 1 / (amounts2[1] / 1000000),
+            sell: amounts1[1] / 1000000
+        };
+            if(process.env.logging_enabled){
+                console.log(`Kyber ${resultAddressOne[0].coin}/${resultAddressTwo[0].coin}`)
+                console.table(rates);
+            }
+            connection.query(
+                'INSERT INTO `prices` (buy_price, sell_price, pair_dex_id) VALUES (' + rates.buy + ", " + rates.sell + ", " + pair_dex_id + ")",
+            ); 
+        }
 
     async displayPrices(result_pairs_dex_one){
 
@@ -73,8 +74,10 @@ class Kyber {
             buy: 1 / (amounts2[1] / 1000000),
             sell: amounts1[1] / 1000000
         };
-        console.log(`Kyber ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin}`)
-        console.table(rates);
+        if(process.env.logging_enabled){
+            console.log(`Kyber ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin}`)
+            console.table(rates);
+        }
         return rates;
     }
 }
