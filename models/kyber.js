@@ -33,7 +33,7 @@ class Kyber {
             buy: 1 / (amounts2[1] / 1000000),
             sell: amounts1[1] / 1000000
         };
-            if(process.env.logging_enabled){
+            if(process.env.LOGGING){
                 console.log(`Kyber ${resultAddressOne[0].coin}/${resultAddressTwo[0].coin}`)
                 console.table(rates);
             }
@@ -74,7 +74,7 @@ class Kyber {
             buy: 1 / (amounts2[1] / 1000000),
             sell: amounts1[1] / 1000000
         };
-        if(process.env.logging_enabled){
+        if(process.env.LOGGING){
             console.log(`Kyber ${result_pairs_dex_one[0].base_coin_coin}/${result_pairs_dex_one[0].quote_coin_coin}`)
             console.table(rates);
         }

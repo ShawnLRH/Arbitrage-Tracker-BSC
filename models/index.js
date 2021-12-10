@@ -2,6 +2,7 @@
 const { connection } = require('../config');
 require('dotenv').config()
 
+//retrieved data from pair and dex data view table
 module.exports.pairAndDexDataOne = (result, i) =>{
     return new Promise((resolve, reject)=>{
         connection.query(
@@ -24,6 +25,7 @@ module.exports.pairAndDexDataTwo = (result, i) =>{
     })
 }
 
+//Retrieve pair to dex table data
 module.exports.get_pair_to_dex = () =>{
     return new Promise((resolve, reject) => {
         connection.query(
@@ -34,6 +36,8 @@ module.exports.get_pair_to_dex = () =>{
         );
     })
 }
+
+//Retrieve Compare mapping table data
 module.exports.get_compare_mapping = () => {
     return new Promise((resolve, reject) => {
         connection.query(
@@ -44,6 +48,8 @@ module.exports.get_compare_mapping = () => {
         )
     })
 }
+
+//Retrieve dex table data
 module.exports.get_dex = (result, i) => {
     return new Promise((resolve, reject)=>{
         connection.query(
@@ -54,6 +60,8 @@ module.exports.get_dex = (result, i) => {
         )
     })
 }
+
+//Retrieve Pairs table data
 module.exports.get_pairs = (result, i) => {
     return new Promise((resolve, reject)=> {
         connection.query(
@@ -64,6 +72,8 @@ module.exports.get_pairs = (result, i) => {
         );
     })
 }
+
+//Retrieve Pairs dex data for comparison
 module.exports.get_pairs_dex_compare = (result, i) => {
     return new Promise((resolve, reject)=> {
         connection.query(
@@ -77,6 +87,8 @@ module.exports.get_pairs_dex_compare = (result, i) => {
         );
     })
 }
+
+//Retrieve address information from the coins table
 module.exports.get_address = (result) =>{
     return new Promise((resolve, reject)=>{
         connection.query('SELECT * FROM `coins` WHERE' +  '`id` = ' + result[0].quote_coin_id + ';' + 'SELECT * FROM `coins` WHERE' +  '`id` = ' + result[0].base_coin_id, [2, 1], 
@@ -89,6 +101,7 @@ module.exports.get_address = (result) =>{
     })
 }
 
+//Retrieve Pairs data for comparison
 module.exports.get_pairs_compare = (result, i) => {
     return new Promise((resolve, reject)=> {
         connection.query(
@@ -100,6 +113,7 @@ module.exports.get_pairs_compare = (result, i) => {
     })
 }
 
+//retrieve dex data for comparison
 module.exports.get_dex_compare = (result, i) => {
     return new Promise((resolve, reject)=>{
         connection.query(

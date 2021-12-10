@@ -5,5 +5,6 @@ DB_PASS=
 LOG_INFO=
 
 INFURA_URL = <Infura URL>
-PRIVATE_KEY = <Wallet PRIVATE_KEY>
-telegram = <Telegram bot api key>
+TELEGRAM = <Telegram bot api key>
+
+LOGGING=0

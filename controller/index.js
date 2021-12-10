@@ -8,9 +8,10 @@ module.exports.insert_database_method = async(req, res) => {
             const result_dex = await get_dex(result_info, i);
             const result_pairs = await get_pairs(result_info, i);
             const result_address = await get_address(result_pairs);
-            await insert_prices_DB(result_dex, result_address, i+1);
+            await insert_prices_DB(result_dex, result_address, result_info[i].id);
         }
     }catch(e){
+        console.log(e);
     }
 }
 
@@ -19,6 +20,6 @@ module.exports.comparePriceMethod = async(req, res) => {
     for(let i = 0; i < result_compare.length; i++){
         const result_pairs_dex_one = await pairAndDexDataOne(result_compare, i);
         const result_pairs_dex_two = await pairAndDexDataTwo(result_compare, i);
-        await comparePrices(result_pairs_dex_one, result_pairs_dex_two, i+1)
+        await comparePrices(result_pairs_dex_one, result_pairs_dex_two, result_compare[i].id)
     }
 }
