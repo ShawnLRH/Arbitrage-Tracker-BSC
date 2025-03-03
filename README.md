@@ -1,6 +1,6 @@
-# Major-Project-BSC
+# Arbitrage-Bot-BSC
 
-This is an Arbitraging Trading bot codebase used for my Major Project.
+This is an Arbitraging Trading bot codebase used on the Binance Smart Chain.
 
 What this does:
 
